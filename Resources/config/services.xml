@@ -14,11 +14,17 @@
                 </argument>
             </argument>
         </service>
+
         <service id="jira_api.issue" class="JiraApiBundle\Service\IssueService" public="true">
             <argument type="service" id="jira_api.rest_client"></argument>
         </service>
+
         <service id="jira_api.search" class="JiraApiBundle\Service\SearchService" public="true">
             <argument type="service" id="jira_api.rest_client"></argument>
-        </service>         
+        </service>
+
+        <service id="jira_api.project" class="JiraApiBundle\Service\ProjectService" public="true">
+            <argument type="service" id="jira_api.rest_client"></argument>
+        </service>
     </services>
 </container>
