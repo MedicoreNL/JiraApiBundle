@@ -1,12 +1,16 @@
 {
     "name": "medicorenl/jira-api-bundle",
     "type": "symfony-bundle",
-    "description": "Stash JIRA api integration in Symfony",
+    "description": "Jira REST API integration in Symfony2.",
     "keywords": ["jira", "rest", "symfony"],
     "authors": [
         {
             "name": "Kees Schepers",
             "email": "kees@keesschepers.nl"
+        },
+        {
+            "name": "Peter Paul Keulers",
+            "email": "pkeulers@gmail.com"
         },
         {
             "name": "Liju Pallikadavath Mohanan",
@@ -17,7 +21,6 @@
         "php": ">=5.3.2",
         "symfony/framework-bundle": ">=2.1.0-dev,<3.0-dev",
         "guzzle/guzzle": "3.5.*"
-
     },
     "autoload": {
         "psr-0": {

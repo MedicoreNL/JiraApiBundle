@@ -1,6 +1,10 @@
 <?php
+
 namespace JiraApiBundle\Tests;
 
+/**
+ * Mocks JSON responses for unit testing purposes.
+ */
 class JsonResponseMock
 {
     protected $response;
@@ -18,6 +22,6 @@ class JsonResponseMock
             throw new \RuntimeException('Unable to parse response body into JSON: ' . json_last_error());
         }
 
-        return $data === null ? array() : $data;
+        return ($data === null ? array() : $data);
     }
 }

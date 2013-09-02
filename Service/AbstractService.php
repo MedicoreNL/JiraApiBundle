@@ -3,6 +3,7 @@
 namespace JiraApiBundle\Service;
 
 use Guzzle\Http\Client;
+use Guzzle\Http\Exception\BadResponseException;
 
 /**
  * Base class that contain common features that is needed by other classes.
@@ -11,7 +12,7 @@ abstract class AbstractService
 {
     /**
      *
-     * @var Guzzle\Http\Client
+     * @var \Guzzle\Http\Client
      */
     protected $client;
 
@@ -23,41 +24,25 @@ abstract class AbstractService
         $this->client = $client;
     }
 
-    protected $resultLimit = 1000;
-
-     /**
-     * Set the maximum number of results being fetched from the REST api.
-     *
-     * @param integer $limit
-     *
-     * @return self
-     */
-    public function setResultLimit($limit)
-    {
-        $this->resultLimit = $limit;
-
-        return $this;
-    }
-
     /**
-     * Creates and returns an stash compatible URL
+     * Creates and returns a compatible URL.
      *
-     * @param string $project
-     * @param string $repository
+     * @param string $path
      * @param array  $params
      *
      * @return string
      */
     protected function createUrl($path, array $params = array())
-    {       
-        $params = array_merge($params, array('limit' => $this->resultLimit));
-        $url = $path . '?' . http_build_query($params);
+    {
+        $paramString = http_build_query($params);
+
+        $url = sprintf('%s?%s', $path, $paramString);
 
         return $url;
     }
 
     /**
-     * Get response from Stash for the given API call.
+     * Get response as an array, returns false if no result.
      *
      * @param string $url
      *
@@ -66,8 +51,39 @@ abstract class AbstractService
     protected function getResponseAsArray($url)
     {
         $request = $this->client->get($url);
-        $response = $request->send();
 
-        return $response->json();
+        try  {
+            $response = $request->send();
+        } catch (BadResponseException $e) {
+            return false;
+        }
+
+        $result = $response->json();
+
+        if ($this->resultHasData($result)) {
+            return $result;
+        }
+
+        return false;
+    }
+
+    /**
+     * Indicates whether the current result page contains data.
+     *
+     * @param $result
+     *
+     * @return bool
+     */
+    private function resultHasData($result)
+    {
+        if (array_key_exists('errorMessages', $result) || array_key_exists('errors', $result)) {
+            return false;
+        }
+
+        if (0 === count($result)) {
+            return false;
+        }
+
+        return true;
     }
 }
