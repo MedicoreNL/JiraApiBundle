@@ -17,8 +17,8 @@ class ProjectService extends AbstractService
      */
     public function getAll()
     {
-        $url = $this->createUrl('project');
-
-        return $this->getResponseAsArray($url);
+        return $this->performQuery(
+            $this->createUrl('project')
+        );
     }
 }

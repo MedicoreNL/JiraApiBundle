@@ -3,21 +3,31 @@
 namespace JiraApiBundle\Service;
 
 use Guzzle\Http\Client;
-use Guzzle\Http\Exception\BadResponseException;
 
 /**
- * Base class that contain common features that is needed by other classes.
+ * Base class that contains common features needed by other services.
  */
 abstract class AbstractService
 {
     /**
-     *
      * @var \Guzzle\Http\Client
      */
     protected $client;
 
     /**
+     * @var \Guzzle\Http\Message\Response
+     */
+    protected $response;
+
+    /**
+     * @var array
+     */
+    protected $result;
+
+    /**
      * Constructor.
+     *
+     * @param \Guzzle\Http\Client $client
      */
     public function __construct(Client $client)
     {
@@ -42,48 +52,47 @@ abstract class AbstractService
     }
 
     /**
-     * Get response as an array, returns false if no result.
+     * Performs the specified query and stores the result.
      *
      * @param string $url
      *
-     * @return array
+     * @return bool|array
      */
-    protected function getResponseAsArray($url)
+    protected function performQuery($url)
     {
         $request = $this->client->get($url);
 
-        try  {
-            $response = $request->send();
-        } catch (BadResponseException $e) {
-            return false;
-        }
+        $this->response = $request->send();
 
-        $result = $response->json();
-
-        if ($this->resultHasData($result)) {
-            return $result;
-        }
-
-        return false;
+        return $this->getResponseAsArray();
     }
 
     /**
-     * Indicates whether the current result page contains data.
+     * Get response as an array.
      *
-     * @param $result
+     * @return array
+     */
+    private function getResponseAsArray()
+    {
+        $this->result = $this->response->json();
+
+        if ($this->responseHasErrors()) {
+            return false;
+        }
+
+        return $this->result;
+    }
+
+    /**
+     * Indicates whether the response contains errors.
      *
      * @return bool
      */
-    private function resultHasData($result)
+    private function responseHasErrors()
     {
-        if (array_key_exists('errorMessages', $result) || array_key_exists('errors', $result)) {
-            return false;
-        }
-
-        if (0 === count($result)) {
-            return false;
-        }
-
-        return true;
+        return (
+            array_key_exists('errorMessages', $this->result) ||
+            array_key_exists('errors', $this->result)
+        );
     }
 }

@@ -6,7 +6,7 @@ use Guzzle\Http\Client;
 use Guzzle\Http\Exception\BadResponseException;
 
 /**
- * Service class that deals with 'Issues' related JIRA apis.
+ * Service class that manages issues.
  */
 class IssueService extends AbstractService
 {    
@@ -17,12 +17,12 @@ class IssueService extends AbstractService
      * 
      * @return array
      */
-    public function getAll($key)
+    public function get($key)
     {
-        $url = $this->createUrl(sprintf('issue/%s', $key));
-
-        $result = $this->getResponseAsArray($url);
-
-        return $result;
+        return $this->performQuery(
+            $this->createUrl(
+                sprintf('issue/%s', $key)
+            )
+        );
     }
 }

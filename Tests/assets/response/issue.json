@@ -2,7 +2,7 @@
     "expand":"renderedFields,names,schema,transitions,operations,editmeta,changelog",
     "id":"15134",
     "self":"https://jira.company.com/jira/rest/api/2/issue/15134",
-    "key":"TD-945",
+    "key":"AA-999",
     "fields":
     {
         "summary":"Summary details",
@@ -61,7 +61,7 @@
             "outwardIssue":
             {
                 "id":"14908",
-                "key":"TD-939",
+                "key":"AA-999",
                 "self":"https://jira.company.com/jira/rest/api/2/issue/14908",
                 "fields":
                 {
@@ -108,9 +108,9 @@
         "workratio":-1,
         "project":
         {
-            "self":"https://jira.company.com/jira/rest/api/2/project/TD",
+            "self":"https://jira.company.com/jira/rest/api/2/project/AA",
             "id":"10203",
-            "key":"TD",
+            "key":"AA",
             "name":"Team MyTeam",
             "avatarUrls":
             {
@@ -168,7 +168,7 @@
         "customfield_10110":null,
         "customfield_10304":null,
         "votes":{
-            "self":"https://jira.company.com/jira/rest/api/2/issue/TD-945/votes",
+            "self":"https://jira.company.com/jira/rest/api/2/issue/AA-999/votes",
             "votes":0,
             "hasVoted":false
         },
@@ -188,7 +188,7 @@
         "customfield_10310":"Not Started",
         "customfield_10104":"6039",
         "watches":{
-            "self":"https://jira.company.com/jira/rest/api/2/issue/TD-945/watchers",
+            "self":"https://jira.company.com/jira/rest/api/2/issue/AA-999/watchers",
             "watchCount":2,
             "isWatching":false
         },

@@ -7,7 +7,7 @@ use JiraApiBundle\Service\IssueService;
 
 class IssueServiceTest extends TestCase
 {
-    public function testIssueServiceGetAll()
+    public function testIssueServiceGet()
     {        
         $jsonFile = __DIR__ . '/../assets/response/issue.json';
 
@@ -15,26 +15,36 @@ class IssueServiceTest extends TestCase
             $this->getClientMock($jsonFile)
         );
 
-        $result = $service->getAll('TD-945');
+        $result = $service->get('AA-999');
 
-        $this->assertEquals('TD-945', $result['key']);
+        $this->assertEquals('AA-999', $result['key']);
         $this->assertEquals('Bug', $result['fields']['issuetype']['name']);
     }
 
-    public function testIssueServiceGetAllException()
+    /**
+     * @expectedException \Guzzle\Http\Exception\BadResponseException
+     */
+    public function testIssueServiceGetException()
     {
         $service = new IssueService($this->getClientMockException());
 
-        $result = $service->getAll('PROJECT', 'repository', 'branch');
-
-        $this->assertEquals(false, $result);
+        $service->get('PROJECT', 'repository', 'branch');
     }
 
-    public function testIssueServiceGetAllNoData()
+    public function testIssueServiceGetNoData()
     {
         $service = new IssueService($this->getClientMockNoData());
 
-        $result = $service->getAll('PROJECT', 'repository', 'branch');
+        $result = $service->get('PROJECT', 'repository', 'branch');
+
+        $this->assertEquals(array(), $result);
+    }
+
+    public function testIssueServiceGetErrors()
+    {
+        $service = new IssueService($this->getClientMockErrors());
+
+        $result = $service->get('PROJECT', 'repository', 'branch');
 
         $this->assertEquals(false, $result);
     }

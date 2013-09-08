@@ -7,7 +7,7 @@ use JiraApiBundle\Service\SearchService;
 
 class SearchServiceTest extends TestCase
 {
-    public function testSearchServiceGetAll()
+    public function testSearchServiceSearch()
     {        
         $jsonFile = __DIR__ . '/../assets/response/search.json';
 
@@ -16,42 +16,43 @@ class SearchServiceTest extends TestCase
         );
 
         $params = array(
-            'jql' => 'id=TD-945'
+            'jql' => 'id=AA-999'
         );
 
-        $service->setLimit(10);
+        $service->setStart(0);
+        $service->setLimit(50);
 
-        $result = $service->getAll($params);
+        $result = $service->search($params);
 
         $this->assertEquals(5, count($result));
-        $this->assertEquals($service->getSize(), 1);
         $this->assertEquals($service->getStart(), 0);
-
+        $this->assertEquals($service->getLimit(), 50);
     }
 
-    public function testSearchServiceGetAllException()
+    /**
+     * @expectedException \Guzzle\Http\Exception\BadResponseException
+     */
+    public function testSearchServiceSearchException()
     {
         $service = new SearchService($this->getClientMockException());
 
-        $result = $service->getAll(array());
-
-        $this->assertEquals(false, $result);
+        $service->search(array());
     }
 
-    public function testSearchServiceGetAllNoData()
+    public function testSearchServiceSearchNoData()
     {
         $service = new SearchService($this->getClientMockNoData());
 
-        $result = $service->getAll(array());
+        $result = $service->search(array());
 
-        $this->assertEquals(false, $result);
+        $this->assertEquals(array(), $result);
     }
 
-    public function testSearchServiceGetAllErrors()
+    public function testSearchServiceSearchErrors()
     {
         $service = new SearchService($this->getClientMockErrors());
 
-        $result = $service->getAll(array());
+        $result = $service->search(array());
 
         $this->assertEquals(false, $result);
     }

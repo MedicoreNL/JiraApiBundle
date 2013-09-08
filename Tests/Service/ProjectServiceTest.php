@@ -20,13 +20,14 @@ class ProjectServiceTest extends TestCase
         $this->assertEquals(2, count($result));
     }
 
+    /**
+     * @expectedException \Guzzle\Http\Exception\BadResponseException
+     */
     public function testProjectServiceGetAllException()
     {
         $service = new ProjectService($this->getClientMockException());
 
-        $result = $service->getAll('PROJECT', 'repository', 'branch');
-
-        $this->assertEquals(false, $result);
+        $service->getAll('PROJECT', 'repository', 'branch');
     }
 
     public function testProjectServiceGetAllNoData()
@@ -35,7 +36,7 @@ class ProjectServiceTest extends TestCase
 
         $result = $service->getAll('PROJECT', 'repository', 'branch');
 
-        $this->assertEquals(false, $result);
+        $this->assertEquals(array(), $result);
     }
 
     public function testProjectServiceGetAllErrors()

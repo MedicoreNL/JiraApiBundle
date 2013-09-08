@@ -3,7 +3,7 @@
 namespace JiraApiBundle\Tests;
 
 /**
- * Mocks empty JSON responses for unit testing purposes.
+ * Mocks empty JSON response for unit testing purposes.
  */
 class EmptyResponseMock
 {
