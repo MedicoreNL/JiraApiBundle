@@ -24,6 +24,9 @@ class JiraApiExtension extends Extension
 
         $loader = new Loader\XmlFileLoader($container, new FileLocator(__DIR__.'/../Resources/config'));
         $loader->load('services.xml');
+
+        $container->setParameter('jira_api.url', $config['url']);
+        $container->setParameter('jira_api.credentials', $config['credentials']);
     }
 
     public function getAlias()

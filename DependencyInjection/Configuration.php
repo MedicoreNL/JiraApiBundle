@@ -16,7 +16,17 @@ class Configuration implements ConfigurationInterface
     public function getConfigTreeBuilder()
     {
         $treeBuilder = new TreeBuilder();
-        $treeBuilder->root('jira_api');
+        $rootNode = $treeBuilder->root('jira_api');
+
+        $rootNode
+            ->children()
+                ->scalarNode('url')
+                    ->isRequired()
+                ->end()
+                ->scalarNode('credentials')
+                    ->isRequired()
+                ->end()
+            ->end();
 
         return $treeBuilder;
     }

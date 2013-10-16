@@ -46,8 +46,9 @@ Installation
 
     ```yaml
     # app/config/config.yml
-        jira_api.url:         "http://jira.your-organisation.com/jira/rest/api/latest/"
-        jira_api.credentials: "username:password"
+        jira_api:
+            url:         "http://jira.your-organisation.com/jira/rest/api/latest/"
+            credentials: "username:password"
     ```
 
 Usage
