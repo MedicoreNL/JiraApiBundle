@@ -57,17 +57,21 @@ Usage
 This bundle contains a number of services, to access them through the service container:
 
 ```php
-// Get the JiraApiBundle\Service\IssueService
+// Get a particulair Jira issue from the JiraApiBundle\Service\IssueService
 $issueService = $this->get('jira_api.issue');
-$issueService->searchBranch($project, $repository, $branch);
+$issueService->get('STORY-KEY');
 
-// Get the JiraApiBundle\Service\ProjectService
+// Get all issues by a project in the JiraApiBundle\Service\ProjectService
 $projectService = $this->get('jira_api.project');
-$projectService->getAll($project, $repository, $params);
+$projectService->getAll();
 
-// Get the JiraApiBundle\Service\SearchService
+// Search for a issue in the JiraApiBundle\Service\SearchService
 $searchService = $this->get('jira_api.search');
-$searchService->getAll($project, $repository, $params);
+$searchService->getAll(
+    array(
+        'jql' => 'assignee=fred+order+by+duedate',
+    )
+);
 ```
 
 You can also add them to the service container of your own bundle:
