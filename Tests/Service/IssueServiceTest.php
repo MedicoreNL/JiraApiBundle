@@ -28,14 +28,14 @@ class IssueServiceTest extends TestCase
     {
         $service = new IssueService($this->getClientMockException());
 
-        $service->get('PROJECT', 'repository', 'branch');
+        $service->get('PROJECT', array());
     }
 
     public function testIssueServiceGetNoData()
     {
         $service = new IssueService($this->getClientMockNoData());
 
-        $result = $service->get('PROJECT', 'repository', 'branch');
+        $result = $service->get('PROJECT', array());
 
         $this->assertEquals(array(), $result);
     }
@@ -44,7 +44,7 @@ class IssueServiceTest extends TestCase
     {
         $service = new IssueService($this->getClientMockErrors());
 
-        $result = $service->get('PROJECT', 'repository', 'branch');
+        $result = $service->get('PROJECT', array());
 
         $this->assertEquals(false, $result);
     }
