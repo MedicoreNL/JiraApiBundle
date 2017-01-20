@@ -2,7 +2,12 @@
 
 namespace JiraApiBundle\Tests;
 
-use Guzzle\Http\Exception\BadResponseException;
+use GuzzleHttp\Client;
+use GuzzleHttp\ClientInterface;
+use GuzzleHttp\Exception\BadResponseException;
+use Psr\Http\Message\RequestInterface;
+use Psr\Http\Message\ResponseInterface;
+use Psr\Http\Message\StreamInterface;
 
 abstract class TestCase extends \PHPUnit_Framework_TestCase
 {
@@ -19,12 +24,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @param mixed $request
      *
-     * @return \Guzzle\Http\Client
+     * @return \GuzzleHttp\Client
      */
     private function mockClientWithRequest($request)
     {
         $client = $this
-            ->getMockBuilder('Guzzle\Http\Client')
+            ->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -44,7 +49,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
      *
      * @param string $jsonFile
      *
-     * @return \Guzzle\Http\Client
+     * @return \GuzzleHttp\Client
      *
      * @throws \RuntimeException
      */
@@ -54,13 +59,22 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             throw new \RuntimeException('Unable to find JSON file.');
         }
 
-        $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
+        $stream = $this->getMock(StreamInterface::class);
+
+        $stream
+            ->expects($this->any())
+            ->method('getContents')
+            ->will(
+                $this->returnValue(new JsonResponseMock($jsonFile))
+            );
+
+        $request = $this->getMock(ResponseInterface::class);
 
         $request
             ->expects($this->any())
-            ->method('send')
+            ->method('getBody')
             ->will(
-                $this->returnValue(new JsonResponseMock($jsonFile))
+                $this->returnValue($stream)
             );
 
         return $this->mockClientWithRequest($request);
@@ -69,12 +83,12 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Get a Guzzle client mock object which triggers a BadResponseException.
      *
-     * @return \Guzzle\Http\Client
+     * @return \GuzzleHttp\Client
      */
     protected function getClientMockException()
     {
         $request = $this
-            ->getMockBuilder('Guzzle\Http\Message\ClientInterface')
+            ->getMockBuilder(ClientInterface::class)
             ->setMethods(array('send'))
             ->getMock();
 
@@ -82,7 +96,7 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
             ->expects($this->once())
             ->method('send')
             ->will(
-                $this->throwException(new BadResponseException())
+                $this->throwException(new BadResponseException("", $request))
             );
 
         return $this->mockClientWithRequest($request);
@@ -91,11 +105,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Get a Guzzle client mock object which returns no data.
      *
-     * @return \Guzzle\Http\Client
+     * @return \GuzzleHttp\Client
      */
     protected function getClientMockNoData()
     {
-        $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
+        $request = $this->getMock(RequestInterface::class);
 
         $request
             ->expects($this->any())
@@ -110,11 +124,11 @@ abstract class TestCase extends \PHPUnit_Framework_TestCase
     /**
      * Get a Guzzle client mock object which returns an error.
      *
-     * @return \Guzzle\Http\Client
+     * @return \GuzzleHttp\Client
      */
     protected function getClientMockErrors()
     {
-        $request = $this->getMock('Guzzle\Http\Message\RequestInterface');
+        $request = $this->getMock(RequestInterface::class);
 
         $request
             ->expects($this->any())

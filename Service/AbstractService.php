@@ -2,7 +2,7 @@
 
 namespace JiraApiBundle\Service;
 
-use Guzzle\Http\Client;
+use GuzzleHttp\Client;
 
 /**
  * Base class that contains common features needed by other services.
@@ -10,12 +10,12 @@ use Guzzle\Http\Client;
 abstract class AbstractService
 {
     /**
-     * @var \Guzzle\Http\Client
+     * @var \GuzzleHttp\Client
      */
     protected $client;
 
     /**
-     * @var \Guzzle\Http\Message\Response
+     * @var \GuzzleHttp\Psr7\Response
      */
     protected $response;
 
@@ -27,7 +27,7 @@ abstract class AbstractService
     /**
      * Constructor.
      *
-     * @param \Guzzle\Http\Client $client
+     * @param \GuzzleHttp\Client $client
      */
     public function __construct(Client $client)
     {
@@ -60,9 +60,7 @@ abstract class AbstractService
      */
     protected function performQuery($url)
     {
-        $request = $this->client->get($url);
-
-        $this->response = $request->send();
+        $this->response = $this->client->get($url);
 
         return $this->getResponseAsArray();
     }
@@ -70,11 +68,11 @@ abstract class AbstractService
     /**
      * Get response as an array.
      *
-     * @return array
+     * @return array|bool
      */
     private function getResponseAsArray()
     {
-        $this->result = $this->response->json();
+        $this->result = \GuzzleHttp\json_decode($this->response->getBody()->getContents());
 
         if ($this->responseHasErrors()) {
             return false;

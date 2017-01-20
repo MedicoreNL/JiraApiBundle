@@ -21,20 +21,20 @@ class ProjectServiceTest extends TestCase
     }
 
     /**
-     * @expectedException \Guzzle\Http\Exception\BadResponseException
+     * @expectedException \GuzzleHttp\Exception\BadResponseException
      */
     public function testProjectServiceGetAllException()
     {
         $service = new ProjectService($this->getClientMockException());
 
-        $service->getAll('PROJECT', 'repository', 'branch');
+        $service->getAll();
     }
 
     public function testProjectServiceGetAllNoData()
     {
         $service = new ProjectService($this->getClientMockNoData());
 
-        $result = $service->getAll('PROJECT', 'repository', 'branch');
+        $result = $service->getAll();
 
         $this->assertEquals(array(), $result);
     }
@@ -43,7 +43,7 @@ class ProjectServiceTest extends TestCase
     {
         $service = new ProjectService($this->getClientMockErrors());
 
-        $result = $service->getAll(array());
+        $result = $service->getAll();
 
         $this->assertEquals(false, $result);
     }

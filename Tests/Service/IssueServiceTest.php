@@ -22,21 +22,28 @@ class IssueServiceTest extends TestCase
     }
 
     /**
-     * @expectedException \Guzzle\Http\Exception\BadResponseException
+     * @expectedException \GuzzleHttp\Exception\BadResponseException
      */
     public function testIssueServiceGetException()
     {
         $service = new IssueService($this->getClientMockException());
 
-        $service->get('PROJECT', 'repository', 'branch');
+        $service->get('PROJECT');
+        $service->get('repository');
+        $service->get('branch');
     }
 
     public function testIssueServiceGetNoData()
     {
         $service = new IssueService($this->getClientMockNoData());
 
-        $result = $service->get('PROJECT', 'repository', 'branch');
+        $result = $service->get('PROJECT');
+        $this->assertEquals(array(), $result);
 
+        $result = $service->get('repository');
+        $this->assertEquals(array(), $result);
+
+        $result = $service->get('branch');
         $this->assertEquals(array(), $result);
     }
 
@@ -44,8 +51,13 @@ class IssueServiceTest extends TestCase
     {
         $service = new IssueService($this->getClientMockErrors());
 
-        $result = $service->get('PROJECT', 'repository', 'branch');
+        $result = $service->get('PROJECT');
+        $this->assertEquals(false, $result);
 
+        $result = $service->get('repository');
+        $this->assertEquals(false, $result);
+
+        $result = $service->get('branch');
         $this->assertEquals(false, $result);
     }
 }

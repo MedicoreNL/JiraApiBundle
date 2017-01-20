@@ -30,7 +30,7 @@ class SearchServiceTest extends TestCase
     }
 
     /**
-     * @expectedException \Guzzle\Http\Exception\BadResponseException
+     * @expectedException \GuzzleHttp\Exception\BadResponseException
      */
     public function testSearchServiceSearchException()
     {
